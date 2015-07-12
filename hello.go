@@ -20,5 +20,5 @@ func main() {
   //   fmt.Println(p.Executable())
   // }
 
-  syscall.Kill(3294, syscall.SIGINT)
+  syscall.Kill(341, syscall.SIGINT)
 }
