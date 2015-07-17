@@ -1,11 +1,13 @@
 package main
 
 import "fmt"
-import "syscall"
+// import "syscall"
 // import "io/ioutil"
 // import "os/exec"
 
 // import "github.com/mitchellh/go-ps"
+
+import "github.com/pusher/pusher-http-go"
 
 func main() {
   fmt.Printf("starting\n")
@@ -20,5 +22,16 @@ func main() {
   //   fmt.Println(p.Executable())
   // }
 
-  syscall.Kill(341, syscall.SIGINT)
+  // syscall.Kill(341, syscall.SIGINT)
+
+  client := pusher.Client{
+    AppId: "130573",
+    Key: "bb9289e6521feadf6999",
+    Secret: "1e97d762ff900c953e06",
+  }
+
+  data := map[string]string{"message": "hello world"}
+
+  client.Trigger("test_channel", "my_event", data)
+
 }
