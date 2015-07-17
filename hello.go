@@ -29,6 +29,7 @@ func main() {
     Key: "bb9289e6521feadf6999",
     Secret: "1e97d762ff900c953e06",
   }
+  client.Secure = true
 
   data := map[string]string{"message": "hello world"}
 
