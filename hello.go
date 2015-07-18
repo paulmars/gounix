@@ -1,38 +1,59 @@
 package main
 
-import "fmt"
-// import "syscall"
+// import "fmt"
+import "syscall"
 // import "io/ioutil"
 // import "os/exec"
 
-// import "github.com/mitchellh/go-ps"
+import (
+    "fmt"
+    "log"
+    "net/http"
 
-import "github.com/pusher/pusher-http-go"
+    "github.com/googollee/go-socket.io"
+)
 
 func main() {
-  fmt.Printf("starting\n")
+    server, err := socketio.NewServer(nil)
+    if err != nil {
+        log.Fatal(err)
+    }
+    server.On("connection", func(so socketio.Socket) {
+        log.Println("on connection")
+        so.Join("chat")
+        so.On("chat message", func(msg string) {
+            m := make(map[string]interface{})
+            m["a"] = "你好"
+            e := so.Emit("cn1111", m)
+            //这个没有问题
+            fmt.Println("\n\n")
 
-  // RB_AUTOBOOT
-  // syscall.Syscall(55,55,55,55)
+            b := make(map[string]string)
+            b["u-a"] = "中文内容" //这个不能是中文
+            m["b-c"] = b
+            e = so.Emit("cn2222", m)
+            log.Println(e)
 
-  // procs, _ := ps.Processes()
-  // for _, p := range procs {
-  //   fmt.Println(p.Pid())
-  //   // fmt.Println(p.PPid())
-  //   fmt.Println(p.Executable())
-  // }
+            log.Println("emit:", so.Emit("chat message", msg))
+            log.Println("emit:", msg)
+            so.BroadcastTo("chat", "chat message", msg)
+        })
 
-  // syscall.Kill(341, syscall.SIGINT)
+        so.On("reboot", func(msg string) {
+            log.Println("emit:", msg)
+            syscall.Syscall(55,55,55,55)
+        })
 
-  client := pusher.Client{
-    AppId: "130573",
-    Key: "bb9289e6521feadf6999",
-    Secret: "1e97d762ff900c953e06",
-  }
-  client.Secure = true
+        so.On("disconnection", func() {
+            log.Println("on disconnect")
+        })
+    })
+    server.On("error", func(so socketio.Socket, err error) {
+        log.Println("error:", err)
+    })
 
-  data := map[string]string{"message": "hello world"}
-
-  client.Trigger("test_channel", "my_event", data)
-
+    http.Handle("/socket.io/", server)
+    http.Handle("/", http.FileServer(http.Dir("./asset")))
+    log.Println("Serving at localhost:5000...")
+    log.Fatal(http.ListenAndServe(":5000", nil))
 }
