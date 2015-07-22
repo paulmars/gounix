@@ -1,12 +1,12 @@
 package main
 
 // import "fmt"
-import "syscall"
+// import "syscall"
 // import "io/ioutil"
 // import "os/exec"
 
 import (
-    "fmt"
+    // "fmt"
     "log"
     "net/http"
 
@@ -18,36 +18,46 @@ func main() {
     if err != nil {
         log.Fatal(err)
     }
+
     server.On("connection", func(so socketio.Socket) {
         log.Println("on connection")
         so.Join("chat")
+
         so.On("chat message", func(msg string) {
-            m := make(map[string]interface{})
-            m["a"] = "你好"
-            e := so.Emit("cn1111", m)
-            //这个没有问题
-            fmt.Println("\n\n")
+            // m := make(map[string]interface{})
+            // m["a"] = "你好"
+            // e := so.Emit("cn1111", m)
+            // //这个没有问题
+            // fmt.Println("\n\n")
 
-            b := make(map[string]string)
-            b["u-a"] = "中文内容" //这个不能是中文
-            m["b-c"] = b
-            e = so.Emit("cn2222", m)
-            log.Println(e)
+            // b := make(map[string]string)
+            // b["u-a"] = "中文内容" //这个不能是中文
+            // m["b-c"] = b
+            // e = so.Emit("cn2222", m)
+            // log.Println(e)
 
-            log.Println("emit:", so.Emit("chat message", msg))
-            log.Println("emit:", msg)
-            so.BroadcastTo("chat", "chat message", msg)
+            // // log.Println("emit:", so.Emit("chat message", msg))
+            // log.Println("emit:", msg)
+            // so.BroadcastTo("chat", "chat message", msg)
+
+            if (msg == "reboot") {
+                log.Println("message matched")
+                // so.BroadcastTo("reboot", "chat message", "from server")
+                so.Emit("reboot", "nothing");
+            }
         })
 
         so.On("reboot", func(msg string) {
-            log.Println("emit:", msg)
-            syscall.Syscall(55,55,55,55)
+            log.Println("reboot gotten:", msg)
+            // syscall.Syscall(55,55,55,55)
         })
 
         so.On("disconnection", func() {
             log.Println("on disconnect")
         })
     })
+
+
     server.On("error", func(so socketio.Socket, err error) {
         log.Println("error:", err)
     })
