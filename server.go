@@ -32,7 +32,7 @@ func echoHandler(ws *websocket.Conn) {
 
 func main() {
   http.Handle("/echo", websocket.Handler(echoHandler))
-  http.Handle("/", http.FileServer(http.Dir(".")))
+  // http.Handle("/", http.FileServer(http.Dir(".")))
   err := http.ListenAndServe(":8080", nil)
   if err != nil {
     panic("Error: " + err.Error())
