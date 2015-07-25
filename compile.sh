@@ -1,1 +1,1 @@
-go build  -o server.out server.go
+go build -o client.out client.go

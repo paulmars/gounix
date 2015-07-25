@@ -6,7 +6,7 @@
     <string>com.marselectric.reboot.golang.plist</string>
     <key>ProgramArguments</key>
     <array>
-        <string>/Users/paul/Development/golangreboot/server.out</string>
+        <string>/Users/paul/Development/golangreboot/client.out</string>
     </array>
     <key>KeepAlive</key>
     <true/>
